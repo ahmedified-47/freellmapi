@@ -980,11 +980,12 @@ function cursor(_ctx: GenerateContext): Generation {
   return {
     files: [],
     notes: [
-      'Cursor sends model traffic through its cloud service, so localhost is not reachable from Cursor.',
-      `Expose the gateway through a trusted HTTPS tunnel, then open Cursor Settings → Models, enable Override OpenAI Base URL, and enter <public-url>/v1.`,
-      'Cursor only documents custom keys for standard chat models; custom base-URL overrides may not support Responses-based or built-in models.',
-      'The override affects Cursor globally while enabled, so disable it before switching back to built-in providers.',
-      'Use a separately revocable URL token if the client cannot set an Authorization header.',
+      'Cursor sends model traffic through its cloud service, so localhost is not reachable. Expose the gateway on trusted HTTPS, then set Override OpenAI Base URL to https://<public-host>/v1. Cursor appends /chat/completions; do not include that path yourself.',
+      'Cursor Settings → Models → API Keys: turn on OpenAI API Key and paste the dashboard unified key (Keys → Unified API key → Show → Copy). That is not a provider key, and it must not be committed.',
+      'Add a custom model named exactly auto. Optional router ids: auto:smart, auto:fast, auto:reliable, auto:balanced, auto:cheap. Other ids must be copied from GET /v1/models. Do not add a name that starts with claude-; Cursor will not send those through the OpenAI override.',
+      'Select that model in a new local Chat or Agent session. Tab, Auto, Cloud Agents, Automations, and the Cursor CLI cannot use this key or base URL.',
+      'The override is global while enabled, including Cursor-hosted model names, so turn it off before using those again.',
+      'auto has nothing to route until Keys → Providers has a usable provider. Kilo Gateway, OVH AI Endpoints, and AI Horde can be saved with a blank key.',
     ],
   };
 }
@@ -1053,7 +1054,7 @@ const metadata = [
   ['hermes', 'Hermes Agent', 'agent', 'file', 'OpenAI Chat', '/v1', 'setup-hermes', 'https://hermes-agent.nousresearch.com/docs/', hermes],
   ['pi', 'Pi', 'code', 'file', 'OpenAI Chat', '/v1', 'setup-pi', 'https://pi.dev/docs/latest/models', pi],
   ['reasonix', 'Reasonix', 'code', 'file', 'OpenAI Chat', '/v1', 'setup-reasonix', 'https://github.com/esengine/DeepSeek-Reasonix/blob/studio/docs/CLI.md#configure-providers', reasonix],
-  ['cursor', 'Cursor', 'code', 'guide', 'OpenAI Chat', '/v1', 'setup-cursor', 'https://docs.cursor.com', cursor],
+  ['cursor', 'Cursor', 'code', 'guide', 'OpenAI Chat', '/v1', 'setup-cursor', 'https://cursor.com/docs/settings/api-keys', cursor],
   ['generic', 'Generic OpenAI client', 'agent', 'guide', 'OpenAI Chat', '/v1', 'setup-generic', 'https://github.com/tashfeenahmed/freellmapi', generic],
 ] as const;
 

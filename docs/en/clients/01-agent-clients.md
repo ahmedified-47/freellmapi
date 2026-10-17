@@ -67,7 +67,43 @@ The root-vs-`/v1` distinction matters: Claude Code expects the server root
 because it appends the Anthropic Messages path. OpenAI-compatible clients in
 this table—including Cline, Aider, Goose, Codex, Continue, OpenCode, Qwen,
 Roo, Kilo, Crush, MiMo Code, AtomCode, OpenClaw, Hermes Agent, Pi, Reasonix, QwenPaw, and DeepSeek Harness—expect their configured
-base URL to include `/v1`.
+base URL to include `/v1`. Cursor does too, but the host must be a public
+HTTPS origin: Cursor's servers call the base URL, so `localhost` never works.
+
+### Cursor
+
+`setup-cursor` writes no file. It prints the guide. Cursor keeps the endpoint
+in **Cursor Settings → Models**, and every model request is built on Cursor's
+servers before it is sent to your base URL
+([Bring your own API key](https://cursor.com/docs/settings/api-keys)).
+
+1. On **Keys → Providers**, add at least one free provider. **Kilo Gateway
+   (no key needed)**, **OVH AI Endpoints (no key needed)**, and **AI Horde
+   (no key needed, slow)** can be saved with the key field left blank. Every
+   other provider needs the key from that provider's own site, pasted into
+   **Add key → Provider key**.
+2. On **Keys → Unified API key**, choose **Show**, then **Copy**. That
+   `freellmapi-…` value is the only key Cursor should see. Do not paste a
+   provider key, and do not commit the unified key.
+3. Publish the API (port 3001) on trusted HTTPS. The value Cursor needs is
+   `https://<public-host>/v1`.
+4. In Cursor, open **Settings → Models** and expand **API Keys**:
+   - Turn on **OpenAI API Key** and paste the unified key.
+   - Turn on **Override OpenAI Base URL** and enter `https://<public-host>/v1`.
+     Cursor appends `/chat/completions`, so the URL must end at `/v1`.
+5. Choose **Add model** (or **Add Custom Model**) and enter `auto`. Enable it.
+   Optional ids on the same endpoint: `auto:smart`, `auto:fast`,
+   `auto:reliable`, `auto:balanced`, `auto:cheap`. Any other name must be an
+   `id` from `GET https://<public-host>/v1/models`. Do not add a name that
+   starts with `claude-` (`claude-opus-4-5`, `claude-sonnet-4-5`,
+   `claude-haiku-4-5`): Cursor does not send those through this override.
+6. Open a new local Chat or Agent, select `auto`, and send a message. Leave
+   Cursor's **Auto** model and Tab completion on Cursor's own models.
+
+The override is global while it is on, so Cursor-hosted model names are sent
+to FreeLLMAPI too. Turn **Override OpenAI Base URL** off before switching
+back. Custom keys are documented for standard chat models; Tab, **Auto**,
+Cloud Agents, Automations, and the Cursor CLI do not use this key or URL.
 
 ### DeepSeek Harness (`dsh`)
 
