@@ -1,0 +1,14 @@
+---
+description: How Cursor reaches the FreeLLMAPI gateway
+alwaysApply: true
+---
+
+# FreeLLMAPI for Cursor
+
+Local Cursor Chat and Agent use this gateway only when Cursor Settings → Models has all of the following:
+
+- OpenAI API Key: the unified key from the dashboard (Keys → Unified API key → Show → Copy). Never a provider key, and never committed.
+- Override OpenAI Base URL: `https://<public-host>/v1` (Cursor appends `/chat/completions`). `localhost` is not reachable.
+- Custom model name: `auto`. Optional names: `auto:smart`, `auto:fast`, `auto:reliable`, `auto:balanced`, `auto:cheap`. Any other name must be an `id` from `GET /v1/models`. Do not use a name that starts with `claude-`.
+
+Tab, Auto, Cloud Agents, Automations, and the Cursor CLI do not use that key or base URL. Do not put the unified key in rules, docs, env examples, URLs, or chat.

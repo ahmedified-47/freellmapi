@@ -34,7 +34,7 @@ Every generator (`cli/src/tools.ts:52-622`) fetches the live catalog, resolves `
 | `setup-dsh` | `~/.dsh/config.json` | OpenAI Chat | DeepSeek Harness (#995) |
 | `setup-mimo` | `~/.config/mimocode/config.json` | OpenAI Chat | MiMo Code `~/.config/mimocode/config.json` `default_provider=freellmapi` + `[providers.freellmapi]` `type=openai` `base_url=/v1` `api_key` `model` `context_window` (#1003) |
 | `setup-atomcode` | `~/.atomcode/config.toml` | OpenAI Chat | AtomCode `default_provider=freellmapi` + `[providers.freellmapi]` TOML preserve other providers (#1025) |
-| `setup-cursor` | guide only | OpenAI Chat | Manual `Cursor Settings → Models → Add Model` (no file) |
+| `setup-cursor` | guide only | OpenAI Chat | Manual `Cursor Settings → Models`: OpenAI API Key, Override OpenAI Base URL `https://<public-host>/v1`, custom model `auto` (no file) |
 | `setup-generic` | guide only | OpenAI Chat | Any OpenAI-compatible client |
 
 ## Zero-persistence launchers

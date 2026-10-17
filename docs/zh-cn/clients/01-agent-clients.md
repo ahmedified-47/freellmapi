@@ -57,7 +57,22 @@ npx freellmapi setup-dsh --url http://localhost:3001 --api-key <统一密钥>
 | **Cursor** | `setup-cursor` 打印指引 | 公共 `https://…/v1` | OpenAI Chat |
 | **其他** | `setup-generic` 打印现成配置块 | `http://localhost:3001/v1` | OpenAI Chat |
 
-根路径与 `/v1` 的区别很重要：Claude Code 期望服务器根路径，因为它会追加 Anthropic Messages 路径。本表中兼容 OpenAI 的客户端——包括 Cline、Aider、Goose、Codex、Continue、OpenCode、Qwen、Roo、Kilo、Crush、Pi、Reasonix、QwenPaw 和 DeepSeek Harness——期望它们配置的 base URL 包含 `/v1`。
+根路径与 `/v1` 的区别很重要：Claude Code 期望服务器根路径，因为它会追加 Anthropic Messages 路径。本表中兼容 OpenAI 的客户端——包括 Cline、Aider、Goose、Codex、Continue、OpenCode、Qwen、Roo、Kilo、Crush、Pi、Reasonix、QwenPaw 和 DeepSeek Harness——期望它们配置的 base URL 包含 `/v1`。Cursor 也需要 `/v1`，但主机必须是公网 HTTPS：请求由 Cursor 的服务器发出，`localhost` 不可达。
+
+### Cursor
+
+`setup-cursor` 不写文件，只打印指引。端点保存在 **Cursor Settings → Models**。模型请求先在 Cursor 的服务器上组装，再发到你的 base URL（[Bring your own API key](https://cursor.com/docs/settings/api-keys)）。
+
+1. 在 **Keys → Providers** 至少添加一个免费提供方。**Kilo Gateway (no key needed)**、**OVH AI Endpoints (no key needed)** 和 **AI Horde (no key needed, slow)** 可以留空密钥后保存。其余提供方需要到其官网创建密钥，再在 **Add key → Provider key** 粘贴。
+2. 打开 **Keys → Unified API key**，点 **Show**，再点 **Copy**。Cursor 只应使用这个 `freellmapi-…` 统一密钥，不要粘贴提供方密钥，也不要提交到仓库。
+3. 把 API（端口 3001）发布到可信的 HTTPS。Cursor 要填的值是 `https://<public-host>/v1`。
+4. 在 Cursor 打开 **Settings → Models**，展开 **API Keys**：
+   - 打开 **OpenAI API Key**，粘贴统一密钥。
+   - 打开 **Override OpenAI Base URL**，填入 `https://<public-host>/v1`。Cursor 会自行追加 `/chat/completions`，所以 URL 必须停在 `/v1`。
+5. 选择 **Add model**（或 **Add Custom Model**），输入 `auto` 并启用。同一端点上的可选 id：`auto:smart`、`auto:fast`、`auto:reliable`、`auto:balanced`、`auto:cheap`。其他名称必须是 `GET https://<public-host>/v1/models` 返回的 `id`。不要添加以 `claude-` 开头的名称（`claude-opus-4-5`、`claude-sonnet-4-5`、`claude-haiku-4-5`）：Cursor 不会把它们发到这个覆盖地址。
+6. 新开一个本地 Chat 或 Agent，选中 `auto` 再发消息。Cursor 自己的 **Auto** 和 Tab 补全仍走 Cursor 的模型。
+
+覆盖开启时是全局的，Cursor 自带模型名也会发到 FreeLLMAPI。切回 Cursor 托管模型前请关闭 **Override OpenAI Base URL**。自定义密钥只覆盖标准对话模型；Tab、**Auto**、Cloud Agents、Automations 和 Cursor CLI 不会使用这把密钥或这个 URL。
 
 ### DeepSeek Harness (`dsh`)
 
